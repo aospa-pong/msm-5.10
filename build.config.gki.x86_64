@@ -2,3 +2,4 @@
 . ${ROOT_DIR}/${KERNEL_DIR}/build.config.x86_64
 . ${ROOT_DIR}/${KERNEL_DIR}/build.config.gki
 
+BUILD_GKI_CERTIFICATION_TOOLS=1
