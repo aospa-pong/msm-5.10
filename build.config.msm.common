@@ -16,6 +16,10 @@ if [ -z $CONFIG_TARGET ]; then
 	CONFIG_TARGET=msm.${MSM_ARCH}
 fi
 
+
+GKI_KLEAF_SUPPRESS_BUILD_SH_DEPRECATION_WARNING=1
+KLEAF_SUPPRESS_BUILD_SH_DEPRECATION_WARNING=1
+
 ################################################################################
 ##
 function compile_external_dtc() {
