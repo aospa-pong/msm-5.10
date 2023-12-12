@@ -195,7 +195,6 @@ static int ashmem_mmap(struct file *file, struct vm_area_struct *vma)
 	struct ashmem_area *asma = file->private_data;
 	unsigned long prot_mask;
 	size_t size;
-	int ret = 0;
 
 	/* user needs to SET_SIZE before mapping */
 	size = READ_ONCE(asma->size);
@@ -215,6 +214,8 @@ static int ashmem_mmap(struct file *file, struct vm_area_struct *vma)
 	vma->vm_flags &= ~calc_vm_may_flags(~prot_mask);
 
 	if (!READ_ONCE(asma->file)) {
+		int ret = 0;
+
 		mutex_lock(&asma->mmap_lock);
 		if (!asma->file)
 			ret = ashmem_file_setup(asma, size, vma);
@@ -231,7 +232,7 @@ static int ashmem_mmap(struct file *file, struct vm_area_struct *vma)
 	 * shmem_set_file while we're in staging. -jstultz
 	 */
 	if (vma->vm_flags & VM_SHARED) {
-		ret = shmem_zero_setup(vma);
+		int ret = shmem_zero_setup(vma);
 		if (ret) {
 			fput(asma->file);
 			return ret;
@@ -311,6 +312,7 @@ static long compat_ashmem_ioctl(struct file *file, unsigned int cmd,
 	return ashmem_ioctl(file, cmd, arg);
 }
 #endif
+
 static const struct file_operations ashmem_fops = {
 	.owner = THIS_MODULE,
 	.open = ashmem_open,
@@ -323,15 +325,6 @@ static const struct file_operations ashmem_fops = {
 	.compat_ioctl = compat_ashmem_ioctl,
 #endif
 };
-
-/*
- * is_ashmem_file - Check if struct file* is associated with ashmem
- */
-int is_ashmem_file(struct file *file)
-{
-	return file->f_op == &ashmem_fops;
-}
-EXPORT_SYMBOL_GPL(is_ashmem_file);
 
 static struct miscdevice ashmem_misc = {
 	.minor = MISC_DYNAMIC_MINOR,
