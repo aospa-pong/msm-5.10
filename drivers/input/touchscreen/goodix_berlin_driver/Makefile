@@ -1,3 +1,6 @@
+# Increase frame size to 2288 because of 'brld_get_framedata' and 'goodix_do_inspect' exceed stack size
+ccflags-y += -Wframe-larger-than=2288
+
 obj-$(CONFIG_TOUCHSCREEN_GOODIX_BRL) += goodix_core.o
 goodix_core-y := \
 				goodix_brl_i2c.o \
