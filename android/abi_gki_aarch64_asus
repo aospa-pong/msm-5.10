@@ -72,7 +72,6 @@ file_remove_privs
 file_update_time
 file_write_and_wait_range
 filp_close
-filp_open
 finish_wait
 flush_dcache_page
 fput
